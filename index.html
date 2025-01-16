@@ -13,9 +13,6 @@
 
     <main>
         <section class = "upload-form">
-            <section class="product-search">
-                <input type="text" id="searchInput" placeholder="Search for a product...">
-            </section>
             <h2>Upload New Product</h2>
             <form id = "form-group">
                 <div class = "form-group">
@@ -38,20 +35,25 @@
                     <input type = "file" id = "productImage" accept = "image/+" required>
                     <div id = "imagePreview" class = "image-preview"></div>
                 </div>
+                <button type="submit" id="submitBtn">Upload Product</button>
             </form>
             <div id = "message" class = "message"></div>
         </section>
 
         <section class = "product-display">
-            <h2>Upload Products</h2>
+            <section class="product-search">
+                <input type="text" id="searchInput" placeholder="Search for a product...">
+            </section>
+            <h2>Uploaded Products</h2>
             <div class="product-rating">
                 <label for="rating">Rate this product:</label>
                 <input type="number" id="rating" min="1" max="5" step="1" />
                 <button onclick="submitRating(product.id)">Submit Rating</button>
             </div>
             <button id="sortNameBtn">Sort by Name</button>
-            <button id="sortPriceBtn">Sort by Name</button>
-            <div id = "productList" class = "product-list"></div>
+            <button id="sortPriceBtn">Sort by Price</button>
+
+            <div id="productList" class="product-list"></div>
 
             <div id="confirmationModal" class="modal">
                 <div class="modal-content">
