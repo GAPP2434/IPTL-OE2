@@ -138,3 +138,82 @@ productImage.addEventListener('change', (e) => {
         reader.readAsDataURL(file);
     }
 });
+
+//sorting products by name or price
+document.getElementById('sortNameBtn').addEventListener('click', () => {
+    products.sort((a, b) => a.name.localeCompare(b.name));
+    displayProducts();
+});
+
+document.getElementById('sortPriceBtn').addEventListener('click', () => {
+    products.sort((a, b) => a.price - b.price);
+    displayProducts();
+});
+
+//search functionality for product name or description
+const searchInput = document.getElementById('searchInput');
+
+searchInput.addEventListener('input', () => {
+    const searchTerm = e.target.value.toLowerCase();
+    const filteredProducts = products.filter(product => 
+        product.name.toLowerCase().includes(searchTerm) || 
+        product.description.toLowerCase().includes(searchTerm)
+    );
+    displayFilteredProducts(filteredProducts);
+});
+
+//dislpay filtered products
+function displayFilteredProducts(filteredProducts){
+    productList.innerHTML = '';
+    filteredProducts.forEach(product => {
+        const productItem = document.createElement('div');
+        productItem.classList.add('product-item');
+        productItem.innerHTML = `
+            <img src="${product.image}" alt="${product.name}">
+            <div class = "product-info">
+                <h3>${product.name}</h3>
+                <p>${product.description}</p>
+                <h4>$${product.price}</h4>
+                <button onclick = "editProduct(${product.id})">Edit</button>
+                <button onclick = "deleteProduct(${product.id})">Delete</button>
+            </div>
+        `;
+        productList.appendChild(productItem);
+    });
+}
+
+let productToDelete = null; //store the product to be deleted
+
+//open the modal and confirm delete
+function openDeleteModal(id){
+    productToDelete = id;
+    document.getElementById('confirmationModal').style.display = 'flex';
+}
+
+//close the modal
+document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+    document.getElementById('confirmationModal').style.display = 'none';
+});
+
+//confirm delete action
+document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+    deleteProduct(productToDelete);
+    document.getElementById('confirmationModal').style.display = 'none';
+});
+
+function deleteProduct(id){
+    products = products.filter(p => p.id !== id);
+    displayProducts();
+}
+
+//add rating to product
+function submitRating(productId){
+    const rating = document.getElementById(`rating`).value;
+    const product = products.find(p => p.id === productId);
+    if(product && rating >= 1 && rating <= 5){
+        product.rating = rating;
+        displayProducts();
+    } else{
+        alert("Invalid rating value. Please enter a value between 1 and 5.");
+    }
+}
