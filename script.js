@@ -14,8 +14,8 @@ const productList = document.getElementById('productList');
 let products = [];
 
 //show image preview
-productImage.addEventListener('change', () => {
-    const file = productImage.files[0];
+productImage.addEventListener('change', (e) => {
+    const file = e.target.files[0];
     if(file){
         const reader = new FileReader();
         reader.onload = () => {
@@ -61,25 +61,43 @@ function displayProducts(){
     products.forEach(product => {
         const productItem = document.createElement('div');
         productItem.classList.add('product-item');
+        const ratingStars = getRatingStars(product.rating); // Get stars based on the rating
         productItem.innerHTML = `
             <img src="${product.image}" alt="${product.name}">
             <div class = "product-info">
                 <h3>${product.name}</h3>
                 <p>${product.description}</p>
                 <h4>$${product.price}</h4>
+                <div class="rating-container">
+                    ${ratingStars}
+                </div>
                 <button onclick = "editProduct(${product.id})">Edit</button>
-                <button onclick = "deleteProduct(${product.id})">Delete</button>
+                <button onclick="openDeleteModal(${product.id})">Delete</button>
                 <div class="product-rating">
+                    <br>
                     <label for="rating">Rate this product:</label>
-                    <input type="number" id="rating" min="1" max="5" step="1" />
-                    <button onclick="submitRating(product.id)">Submit Rating</button>
+                    <input type="number" id="rating-${product.id}" min="1" max="5" step="1" />
+                    <button onclick="submitRating(${product.id})">Submit Rating</button>
                 </div>
             </div>
-            
         `;
         productList.appendChild(productItem);
     });
 }
+
+// Function to generate the star ratings
+function getRatingStars(rating) {
+    let stars = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= rating) {
+            stars += `<span class="star filled">★</span>`;
+        } else {
+            stars += `<span class="star empty">☆</span>`;
+        }
+    }
+    return stars;
+}
+
 
 //edit product
 function editProduct(id){
@@ -103,6 +121,7 @@ function deleteProduct(id){
     products = products.filter(p => p.id !== id);
     displayProducts();
 }
+
 
 //clear the form after submission
 function clearForm(){
@@ -158,7 +177,7 @@ document.getElementById('sortPriceBtn').addEventListener('click', () => {
 //search functionality for product name or description
 const searchInput = document.getElementById('searchInput');
 
-searchInput.addEventListener('input', () => {
+searchInput.addEventListener('input', (e) => {
     const searchTerm = e.target.value.toLowerCase();
     const filteredProducts = products.filter(product => 
         product.name.toLowerCase().includes(searchTerm) || 
@@ -168,24 +187,35 @@ searchInput.addEventListener('input', () => {
 });
 
 //dislpay filtered products
-function displayFilteredProducts(filteredProducts){
+function displayFilteredProducts(filteredProducts) {
     productList.innerHTML = '';
     filteredProducts.forEach(product => {
         const productItem = document.createElement('div');
         productItem.classList.add('product-item');
+        const ratingStars = getRatingStars(product.rating); // Get stars based on the rating
         productItem.innerHTML = `
             <img src="${product.image}" alt="${product.name}">
-            <div class = "product-info">
+            <div class="product-info">
                 <h3>${product.name}</h3>
                 <p>${product.description}</p>
                 <h4>$${product.price}</h4>
-                <button onclick = "editProduct(${product.id})">Edit</button>
-                <button onclick = "deleteProduct(${product.id})">Delete</button>
+                <div class="rating-container">
+                    ${ratingStars}
+                </div>
+                <button onclick="editProduct(${product.id})">Edit</button>
+                <button onclick="openDeleteModal(${product.id})">Delete</button>
+                <div class="product-rating">
+                    <br>
+                    <label for="rating">Rate this product:</label>
+                    <input type="number" id="rating-${product.id}" min="1" max="5" step="1" />
+                    <button onclick="submitRating(${product.id})">Submit Rating</button>
+                </div>
             </div>
         `;
         productList.appendChild(productItem);
     });
 }
+
 
 let productToDelete = null; //store the product to be deleted
 
@@ -213,11 +243,13 @@ function deleteProduct(id){
 
 //add rating to product
 function submitRating(productId){
-    const rating = document.getElementById(`rating`).value;
+    const ratingInput = document.getElementById(`rating-${productId}`);
+    const rating = parseInt(ratingInput.value);
     const product = products.find(p => p.id === productId);
+    
     if(product && rating >= 1 && rating <= 5){
         product.rating = rating;
-        displayProducts();
+        displayProducts(); // Redisplay products with updated rating
     } else{
         alert("Invalid rating value. Please enter a value between 1 and 5.");
     }
