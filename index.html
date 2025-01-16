@@ -14,7 +14,7 @@
     <main>
         <section class = "upload-form">
             <h2>Upload New Product</h2>
-            <form id = "form-group">
+            <form id = "productForm">
                 <div class = "form-group">
                     <label for = "productName">Product Name</label>
                     <input type = "text" id = "productName" placeholder = "Enter product name" required>
@@ -41,26 +41,24 @@
         </section>
 
         <section class = "product-display">
-            <section class="product-search">
+            <div class="product-search">
                 <input type="text" id="searchInput" placeholder="Search for a product...">
-            </section>
-            <h2>Uploaded Products</h2>
-            <div class="product-rating">
-                <label for="rating">Rate this product:</label>
-                <input type="number" id="rating" min="1" max="5" step="1" />
-                <button onclick="submitRating(product.id)">Submit Rating</button>
             </div>
-            <button id="sortNameBtn">Sort by Name</button>
-            <button id="sortPriceBtn">Sort by Price</button>
+                <button id="sortNameBtn">Sort by Name</button>
+                <button id="sortPriceBtn">Sort by Price</button>
 
-            <div id="productList" class="product-list"></div>
-
-            <div id="confirmationModal" class="modal">
-                <div class="modal-content">
-                    <h3>Are you sure you want to delete this product?</h3>
-                    <button id="confirmDeleteBtn">Yes, Delete</button>
-                    <button id="cancelDeleteBtn">Cancel</button>
+    
+                <div id="confirmationModal" class="modal">
+                    <div class="modal-content">
+                        <h3>Are you sure you want to delete this product?</h3>
+                        <button id="confirmDeleteBtn">Yes, Delete</button>
+                        <button id="cancelDeleteBtn">Cancel</button>
+                    </div>
                 </div>
+            <h2>Uploaded Products</h2>
+                
+            <div id="productList" class="product-list">
+     
             </div>
         </section>
     </main>
